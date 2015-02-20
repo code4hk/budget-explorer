@@ -29,7 +29,7 @@ def emptyLine(line):
 for year in range(2006,2015):
     head= 122
     inputFileName = '_'.join(['parsed/chead'+str(head),str(year)])+'.txt'
-    outputFileName = '_'.join(['extracted/chead'+str(head),str(year)])+'.txt'
+    outputFileName = '_'.join(['extracted/chead'+str(head),str(year)])+'.csv'
 
     f = open(inputFileName,'r')
     output = open(outputFileName,'w')
