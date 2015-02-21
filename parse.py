@@ -26,8 +26,9 @@ def emptyLine(line):
     else:
         return True
 
+head= 121
+alloutput = open('extracted/chead'+str(head)+'_all.csv','w')
 for year in range(2006,2015):
-    head= 122
     inputFileName = '_'.join(['parsed/chead'+str(head),str(year)])+'.txt'
     outputFileName = '_'.join(['extracted/chead'+str(head),str(year)])+'.csv'
 
@@ -45,12 +46,28 @@ for year in range(2006,2015):
             # print "2:"+m.group(2)
             if m.group(2) is not None:
                 numberLiterals = m.group(2).split('  ')
-                numbers = map(getCount, numberLiterals)
+                if len(numberLiterals) <=3:
+                    usualLength = len(numberLiterals[-1])
+                    #get closest space and split there
+                    #most likely 1 234
+                    concatNumberLiterals = m.group(2).replace('  ',' ')
+                    concatNumberLiterals = re.sub(r"(\d) (\d\d\d)", r"\1\2", concatNumberLiterals)
+                    print concatNumberLiterals
+                    numberLiterals = concatNumberLiterals.split(' ')
+                    numbers = map(getCount, numberLiterals)
+                else:
+                    numbers = map(getCount, numberLiterals)
+            print numbers
             itemName = m.group(1).replace(' ','')
             itemName = concatLastlineIfGood(itemName, lastline)
             output.write(itemName+",")
             output.write(','.join(numbers))
             output.write("\n")
+
+            alloutput.write(str(year)+",")
+            alloutput.write(itemName+",")
+            alloutput.write(','.join(numbers))
+            alloutput.write("\n")
         lastline = line
 
     output.close()
@@ -58,3 +75,8 @@ for year in range(2006,2015):
     print "output:"
     for line in outputWritten:
         print line
+
+
+rubbish = ['‡']
+
+alloutput.close()

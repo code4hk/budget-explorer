@@ -1,0 +1,9 @@
+# docker-host-vm/Vagrantfile
+ 
+Vagrant.configure("2") do |config|
+  config.vm.box = "hashicorp/precise64"
+ 
+  # web port
+  config.vm.network :forwarded_port, host: 9200, guest: 9200
+  config.vm.provision "docker"
+end
