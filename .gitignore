@@ -1,2 +1,4 @@
 raw/*.pdf
 node_modules/
+.vagrant
+docker-host-vm/.vagrant/
