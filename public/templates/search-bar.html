@@ -1,0 +1,17 @@
+<div class="ui fluid category search">
+  <div class="ui icon input ">
+    <input ng-model="query" class="prompt" type="text" placeholder="Search for budget items...">
+    <i class="search icon"></i>
+  </div>
+  <div class="results transition visible">
+    <div ng-repeat="suggestion in suggestions" class="category" >
+      <div class="name"><i class="bar chart icon"></i> {{suggestion.category}}</div>
+      <div ng-repeat="result in suggestion.results" class="result">
+        <div class="content">
+          <div class="title">{{result.title}}</div>
+          <div class="description">{{result.head}}</div>
+          </div>
+      </div>
+      </div>
+      </div><a href="#action" class="action">View all results</a></div>
+</div>

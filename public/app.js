@@ -11,7 +11,41 @@ angular.module('budgetExplorer', ['dangle', 'elasticsearch', 'nvd3'])
 
 
 angular.module('budgetExplorer')
-  .controller('MainCtrl', function($scope, client) {
+  .controller('MainCtrl', function($scope) {
+
+  })
+  .controller('QueryCtrl', function($scope) {
+
+  })
+  .directive('searchBar', function() {
+    return {
+      restrict: 'E',
+      transclude: true,
+      scope: {},
+      templateUrl: 'templates/search-bar.html',
+      link: function(scope, element) {
+        scope.name = 'Jeff';
+        scope.suggestions = [{
+          "category": "Charts", //type
+          "results": [{
+            "title": "緊急求救召喚數目",
+            "head": "警務處"
+          }]
+        }];
+        scope.$watch('query', function(newVal) {
+          console.log('testing' + newVal);
+        });
+
+        function _showSuggestions() {
+
+        }
+
+
+
+      }
+    };
+  })
+  .controller('ResultsCtrl', function($scope, client) {
 
     function _searchSavedBarChart() {
       client.search({

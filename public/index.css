@@ -1,0 +1,15 @@
+/*.main-search-container {
+  width:75%;
+  min-width:25rem;
+}*/
+.main-search-container .input{
+  width:100%;
+}
+
+/*.main-search-container .results{
+  min-width:25rem;
+}*/
+
+.ui.grid.main-search-section{
+  margin-bottom:20rem;
+}
