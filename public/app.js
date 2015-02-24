@@ -2,7 +2,7 @@ require('./vendor/angular-1.3.13');
 angular.module('budgetExplorer', ['dangle', 'elasticsearch', 'nvd3'])
   .service('client', function(esFactory) {
     //TODO extract
-    var HOST = "128.199.122.178:9200";
+    var HOST = "localhost:9200";
     return esFactory({
       host: HOST,
       apiVersion: '1.2',
