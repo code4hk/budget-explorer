@@ -8,3 +8,5 @@ dpkg -i vagrant_1.7.2_x86_64.deb
 git clone https://github.com/code4hk/budget-explorer.git
 cd /root/budget-explorer/docker-host-vm
 vagrant up
+
+npm install -g gulp

@@ -53,7 +53,7 @@ angular.module('budgetExplorer')
         body: ejs.Request()
           .query(ejs.QueryStringQuery(key).fields([
             'key_not_analyzed'
-          ])).size(100)
+          ])).size(100).sort(ejs.Sort("year"))
       }, function(error, response) {
         // handle response
         $scope._rawResults = response.hits.hits;
