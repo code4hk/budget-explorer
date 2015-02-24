@@ -8,66 +8,21 @@ angular.module('budgetExplorer', ['dangle', 'elasticsearch', 'nvd3'])
     });
   });
 
-
+function _getHeadAndTitle(key) {
+  var splitKey = key.split("_")
+  return {
+    "title": splitKey[1],
+    "head": splitKey[0]
+  }
+}
 
 angular.module('budgetExplorer')
-  .controller('MainCtrl', function($scope) {
+  .controller('MainCtrl', function($scope, client) {
 
-  })
-  .controller('QueryCtrl', function($scope) {
-
-  })
-  .directive('searchBar', function() {
-    return {
-      restrict: 'E',
-      transclude: true,
-      scope: {},
-      templateUrl: 'templates/search-bar.html',
-      link: function(scope, element) {
-        scope.name = 'Jeff';
-        scope.suggestions = [{
-          "category": "Charts", //type
-          "results": [{
-            "title": "緊急求救召喚數目",
-            "head": "警務處"
-          }]
-        }];
-        scope.$watch('query', function(newVal) {
-          console.log('testing' + newVal);
-        });
-
-        function _showSuggestions() {
-
-        }
-
-
-
-      }
-    };
-  })
-  .controller('ResultsCtrl', function($scope, client) {
-
-    function _searchSavedBarChart() {
-      client.search({
-        index: 'budget',
-        body: ejs.Request()
-          .query(ejs.QueryStringQuery('緊急求救召喚數目'))
-          // .facet(ejs.TermsFacet('tags').field('tags'))
-      }, function(error, response) {
-        // handle response
-        console.log(response);
-        $scope._rawResults = response.hits.hits;
-
-        $scope.data = barChartFromData(response.hits.hits);
-      });
-
-    }
-
-    function barChartFromData(hits) {
+    function setBarChartData(hits) {
       var values = [];
 
       hits.forEach(function(hit) {
-        console.log(hit);
         var result = hit._source;
         if (!result) {
           return;
@@ -80,17 +35,36 @@ angular.module('budgetExplorer')
           "value": result.value
         };
         values.push(value);
-      })
+      });
 
-      $scope.data = [{
+      return [{
         key: "Cumulative Return",
         values: values
       }]
-      return $scope.data;
     }
 
-    _searchSavedBarChart();
+    function _searchSavedBarChart(key) {
 
+      //TODO this concat key search is weired. use filtered FieldQuery search is better
+      client.search({
+        index: 'budget',
+        body: ejs.Request()
+          .query(ejs.QueryStringQuery(key).fields([
+            'key_not_analyzed'
+          ])).size(100)
+      }, function(error, response) {
+        // handle response
+        $scope._rawResults = response.hits.hits;
+        $scope.totalResultsCount = response.hits.hits.length;
+        $scope.data = setBarChartData(response.hits.hits);
+      });
+    }
+
+    $scope.$on('queryChart', function($event, key) {
+      _searchSavedBarChart(key);
+    })
+  })
+  .controller('ResultsCtrl', function($scope) {
     $scope.options = {
       chart: {
         type: 'discreteBarChart',
@@ -122,6 +96,91 @@ angular.module('budgetExplorer')
       }
     };
 
+  })
+  .directive('searchBar', function() {
+    return {
+      restrict: 'E',
+      transclude: true,
+      scope: {
+        // suggestionInfo: '='
+      },
+      templateUrl: 'templates/search-bar.html',
+      link: function(scope, element) {
+        scope.name = 'Jeff';
+        // scope.suggestions = [{
+        //   "category": "Charts", //type
+        //   "results": [{
+        //     "title": "緊急求救召喚數目",
+        //     "head": "警務處"
+        //   }]
+        // }];
+        scope.suggestions = [];
+        scope.$watch('query', function(newVal) {
+          console.log('testing' + newVal);
+        });
+        //seems event is better than scope inherit & watch collection here;
+        scope.$on('suggestionsUpdated', function($event, suggestions) {
+          scope.suggestions = suggestions;
+        })
+
+        function _showSuggestions() {
+
+        }
+
+        scope.queryChart = function(result) {
+          console.log(result.head);
+          scope.$emit('queryChart', result.head + "_" + result.title)
+        }
+
+      }
+    };
+  })
+  .controller('QueryCtrl', function($scope, client) {
+    $scope.MAX_RESULTS = 5;
+
+
+    function _searchForKeys() {
+      var suggestions = [];
+      // TermsAggregation
+
+      // headId
+      // convert headId into string for fuzzy match
+      //need english key
+      client.search({
+        index: 'budget',
+        body: ejs.Request()
+          .query(ejs.QueryStringQuery("舉報").fields(['key', 'head']))
+          .agg(ejs.TermsAggregation("unique").field("key_not_analyzed"))
+          // .facet(ejs.TermsFacet('tags').field('tags'))
+      }, function(error, response) {
+        // handle response
+        console.log(response.aggregations.unique.buckets);
+        $scope.keyResults = response.aggregations.unique.buckets.map(
+          function(bucket) {
+            return bucket.key;
+          });
+
+        var suggestion = {
+          "category": "Charts", //type
+          "results": []
+        };
+
+        suggestion["results"] = $scope.keyResults
+          .map(
+            function(key) {
+              return _getHeadAndTitle(key);
+            });
+        suggestions.push(suggestion);
+        $scope.$broadcast('suggestionsUpdated', suggestions);
+
+        // response.aggregations.unique.buckets;
+      });
+    }
+
+
+
+    _searchForKeys();
+    // _searchSavedBarChart();
 
 
   })

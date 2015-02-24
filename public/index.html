@@ -12,17 +12,19 @@
   <link rel="stylesheet" href="bower_components/nvd3/nv.d3.css">
 </head>
 <body ng-controller="MainCtrl" id="home">
-  <nav>
+  <nav class="ui red label " style="background-color:red;">
+    This is still a prototype. Data to be validated.
   </nav>
   <h1 class="ui header">Budget Explorer</h1>
   <section ng-controller="QueryCtrl" class="ui grid main-search-section">
     <div class="center aligned column main-search-container">
-        <search-bar></search-bar>
+        <search-bar ></search-bar>
     </div>
  </section>
   <section ng-controller="ResultsCtrl" class="ui stripe page vertical segment">
-    {{_rawResults}}
+    <div class="card">
     <nvd3 options="options" data="data"></nvd3>
+    </div>
   </section>
 
   <script src="build/build.js"></script>

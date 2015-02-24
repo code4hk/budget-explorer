@@ -1,4 +1,5 @@
 raw/*.pdf
 node_modules/
-.vagrant
+.vagrant/
 docker-host-vm/.vagrant/
+components/

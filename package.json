@@ -7,6 +7,7 @@
     "watch": "^0.14.0",
     "gulp-watch": "^4.1.1",
     "gulp-livereload": "^3.7.0",
-    "gulp-component-build": "0.0.5"
+    "gulp-component-build": "0.0.5",
+    "csv-parse": "*"
   }
 }

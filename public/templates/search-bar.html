@@ -7,11 +7,12 @@
     <div ng-repeat="suggestion in suggestions" class="category" >
       <div class="name"><i class="bar chart icon"></i> {{suggestion.category}}</div>
       <div ng-repeat="result in suggestion.results" class="result">
-        <div class="content">
+        <div ng-click="queryChart(result)" class="content">
           <div class="title">{{result.title}}</div>
           <div class="description">{{result.head}}</div>
           </div>
       </div>
       </div>
-      </div><a href="#action" class="action">View all results</a></div>
+      <a ng-show="totalResultsCount>MAX_RESULTS" href="#action" class="action">View all results</a></div>
+      </div>
 </div>

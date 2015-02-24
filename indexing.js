@@ -21,11 +21,13 @@ function transformToDoc(row, head) {
   var docs = [];
   _.forEach(years, function(y) {
     var doc = {};
+    var headKey = headTitles[head.toString()];
     doc['key'] = row['Key'];
+    doc['key_not_analyzed'] = headKey + "_" + row['Key'];
     doc['year'] = y;
     doc['value'] = row[y.toString()];
     doc['headId'] = head;
-    doc['head'] = headTitles[head.toString()];
+    doc['head'] = headKey
     console.log(doc['value']);
     docs.push(doc);
   })

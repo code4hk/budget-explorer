@@ -1,0 +1,25 @@
+{
+      "122": {
+        "properties": {
+          "head": {
+            "type": "string"
+          },
+          "headId": {
+            "type": "long"
+          },
+          "key": {
+            "type": "string"
+          },
+          "key_not_analyzed": {
+            "type": "string",
+            "index" : "not_analyzed"
+          },
+          "value": {
+            "type": "string"
+          },
+          "year": {
+            "type": "long"
+          }
+        }
+      }
+}
