@@ -1,8 +1,10 @@
 require('./vendor/angular-1.3.13');
 angular.module('budgetExplorer', ['dangle', 'elasticsearch', 'nvd3'])
   .service('client', function(esFactory) {
+    //TODO extract
+    var HOST = "128.199.122.178:9200";
     return esFactory({
-      host: 'localhost:9200',
+      host: HOST,
       apiVersion: '1.2',
       log: 'trace'
     });
@@ -103,6 +105,7 @@ angular.module('budgetExplorer')
       transclude: true,
       scope: {
         // suggestionInfo: '='
+        queryInfo: '='
       },
       templateUrl: 'templates/search-bar.html',
       link: function(scope, element) {
@@ -115,8 +118,10 @@ angular.module('budgetExplorer')
         //   }]
         // }];
         scope.suggestions = [];
-        scope.$watch('query', function(newVal) {
+        scope.$watch('queryInfo.query', function(newVal) {
           console.log('testing' + newVal);
+          //TODO debounce
+          scope.$emit('searchSuggestions');
         });
         //seems event is better than scope inherit & watch collection here;
         scope.$on('suggestionsUpdated', function($event, suggestions) {
@@ -135,21 +140,33 @@ angular.module('budgetExplorer')
       }
     };
   })
-  .controller('QueryCtrl', function($scope, client) {
+  .controller('QueryCtrl', function($scope, client, $timeout) {
     $scope.MAX_RESULTS = 5;
+    $scope.queryInfo = {
+      query: ""
+    };
 
+    $timeout(function() {
+      $scope.queryInfo.query = "舉報";
+    }, 2000);
+
+    $scope.$on('searchSuggestions', function($event) {
+      _searchForKeys();
+    })
 
     function _searchForKeys() {
       var suggestions = [];
       // TermsAggregation
-
       // headId
       // convert headId into string for fuzzy match
       //need english key
       client.search({
         index: 'budget',
         body: ejs.Request()
-          .query(ejs.QueryStringQuery("舉報").fields(['key', 'head']))
+          .query(ejs.QueryStringQuery($scope.queryInfo.query).fields([
+            'key',
+            'head'
+          ]))
           .agg(ejs.TermsAggregation("unique").field("key_not_analyzed"))
           // .facet(ejs.TermsFacet('tags').field('tags'))
       }, function(error, response) {
@@ -179,7 +196,7 @@ angular.module('budgetExplorer')
 
 
 
-    _searchForKeys();
+    // _searchForKeys();
     // _searchSavedBarChart();
 
 
