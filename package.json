@@ -9,5 +9,8 @@
     "gulp-livereload": "^3.7.0",
     "gulp-component-build": "0.0.5",
     "csv-parse": "*"
+  },
+  "devDependencies": {
+    "gulp-usemin": "^0.3.11"
   }
 }

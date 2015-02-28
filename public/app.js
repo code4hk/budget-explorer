@@ -1,5 +1,5 @@
 require('./vendor/angular-1.3.13');
-angular.module('budgetExplorer', ['dangle', 'elasticsearch', 'nvd3'])
+angular.module('budgetExplorer', ['elasticsearch', 'nvd3'])
   .service('client', function(esFactory) {
     //TODO extract
     var HOST = "localhost:9200";

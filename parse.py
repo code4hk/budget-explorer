@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import sys
 
 
 def getCount(numberLiteral):
@@ -27,7 +28,11 @@ def emptyLine(line):
     else:
         return True
 
-head= 121
+if len(sys.argv) < 2:
+    raise Exception("insuff arugments")
+else:
+    head= sys.argv[1]
+
 alloutput = open('extracted/chead'+str(head).zfill(3)+'_all.csv','w')
 for year in range(2006,2015):
     inputFileName = '_'.join(['parsed/chead'+str(head).zfill(3),str(year)])+'.txt'
