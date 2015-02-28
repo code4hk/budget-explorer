@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 
@@ -27,10 +28,10 @@ def emptyLine(line):
         return True
 
 head= 121
-alloutput = open('extracted/chead'+str(head)+'_all.csv','w')
+alloutput = open('extracted/chead'+str(head).zfill(3)+'_all.csv','w')
 for year in range(2006,2015):
-    inputFileName = '_'.join(['parsed/chead'+str(head),str(year)])+'.txt'
-    outputFileName = '_'.join(['extracted/chead'+str(head),str(year)])+'.csv'
+    inputFileName = '_'.join(['parsed/chead'+str(head).zfill(3),str(year)])+'.txt'
+    outputFileName = '_'.join(['extracted/chead'+str(head).zfill(3),str(year)])+'.csv'
 
     f = open(inputFileName,'r')
     output = open(outputFileName,'w')
