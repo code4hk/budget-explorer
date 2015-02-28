@@ -10,9 +10,7 @@ var fileStream = fs.createReadStream('../raw/csv/des.csv', {
 
 
 //TODO load from config
-var headMap = {
-  21: 'CEO'
-}
+var headMap = require('./head_mapping.csv');
 
 var parser = parse({
   delimiter: ','

@@ -12,6 +12,7 @@ var url =
 
 // https://docs.google.com/spreadsheets/d/13jMkUNgkszuJGxuwsnwBMMhqKYqnAE0OOXe8rs8WYPM/?format=csv
 var mapping = {};
+var engMapping = {};
 
 var parser = parse({
   delimiter: ','
@@ -22,10 +23,13 @@ var parser = parse({
       return;
     }
     mapping[parseInt(row[0])] = row[1];
+    engMapping[parseInt(row[0])] = row[3];
     // var doc2014 = transformToDoc(data, 2015);
   })
-  console.log(mapping);
-  var mappingFile = fs.writeFile('head_mapping.csv', JSON.stringify(mapping));
+  fs.writeFile('head_mapping_chi.json', JSON.stringify(
+    mapping));
+  fs.writeFile('head_mapping_eng.json', JSON.stringify(
+    engMapping));
 
 });
 
