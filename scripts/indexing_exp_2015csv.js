@@ -16,9 +16,12 @@ var parser = parse({
   // console.log(data);
   var docs = [];
   data.forEach(function(row) {
-    var doc2015 = transformer.transform(row, transformMapping2015, {
-      "year": 2014
-    });
+    var context2015 = {
+      "year": 2015,
+      "headKey": headMap[row[0]]
+    };
+    var doc2015 = transformer.transform(row, transformMapping2015,
+      context2015);
     docs.push(doc2015);
     // var doc2014 = transformToDoc(row, 2014);
     // docs.push(doc2014);
@@ -43,9 +46,6 @@ var transformMapping2015 = {
     } //most dynamic field
 }
 
-var context2015 = {
-
-}
 
 var transformMapping2014 = _.clone(transformMapping2015);
 
@@ -60,7 +60,7 @@ transformer._getValueByMethod = function(row, mappingMethod, context) {
     case 'function':
       return mappingMethod(row);
     case 'string':
-      return row[mapping[mappingMethod]];
+      return context[mappingMethod];
     case 'number':
       return row[mappingMethod];
     default:
@@ -78,23 +78,23 @@ transformer.transform = function(row, mapping, context) {
 }
 
 //TODO sync w/ legacy years transfomrer
-var transformToDoc = function(row, year) {
-  var doc = {
-    headId: row[0],
-    headKey: headMap[row[0]],
-    key: row[2]
-  }
-  if (year === 2014) {
-    doc["value"] = row[3];
-  } else if (year === 2015) {
-    doc["value"] = row[6] * 1000; //From the column. TODO detect from column header
-    doc["composition"] = row[5];
-    doc['key_not_analyzed'] = doc.headKey + "_" + doc.key;
-  }
-  doc["year"] = year;
-  doc["head"] = doc.headKey;
-  return doc;
-}
+// var transformToDoc = function(row, year) {
+//   var doc = {
+//     headId: row[0],
+//     headKey: headMap[row[0]],
+//     key: row[2]
+//   }
+//   if (year === 2014) {
+//     doc["value"] = row[3];
+//   } else if (year === 2015) {
+//     doc["value"] = row[6] * 1000; //From the column. TODO detect from column header
+//     doc["composition"] = row[5];
+//     doc['key_not_analyzed'] = doc.headKey + "_" + doc.key;
+//   }
+//   doc["year"] = year;
+//   doc["head"] = doc.headKey;
+//   return doc;
+// }
 
 
 fileStream.pipe(parser);
